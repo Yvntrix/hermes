@@ -12,16 +12,18 @@ const ChatBox = () => {
   const query = messagesRef.orderBy("createdAt").limit(25);
 
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
+  let mess = "";
   const sendMessage = async () => {
+    mess = value;
+    setValue("");
     //@ts-expect-error
     const { uid, photoURL } = auth.currentUser;
     await messagesRef.add({
-      text: value,
+      text: mess,
       createdAt: serverTimestamp(),
       uid,
       photoURL,
     });
-    setValue("");
   };
   return (
     <>

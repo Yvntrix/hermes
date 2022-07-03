@@ -25,7 +25,7 @@ const NavBar = () => {
             ""
           )}
         </Group>
-        <Divider my="sm" />
+     
       </Paper>
     </>
   );
