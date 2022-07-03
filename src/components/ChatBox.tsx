@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Send } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
-
+import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 const ChatBox = () => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
@@ -15,14 +15,12 @@ const ChatBox = () => {
   const sendMessage = async () => {
     //@ts-expect-error
     const { uid, photoURL } = auth.currentUser;
-
     await messagesRef.add({
       text: value,
       createdAt: serverTimestamp(),
       uid,
       photoURL,
     });
-
     setValue("");
   };
   return (
@@ -33,6 +31,7 @@ const ChatBox = () => {
           onChange={(event) => setValue(event.currentTarget.value)}
           sx={{ flexGrow: 1 }}
           placeholder="Say Something Nice "
+          onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
         />
         <ActionIcon
           onClick={() => sendMessage()}
