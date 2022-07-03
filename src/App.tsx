@@ -11,7 +11,7 @@ function App() {
     <>
       <Container sx={{ minHeight: "100vh" }} p={0}>
         <NavBar />
-        <GoogleSignIn />
+        {user ? "" : <GoogleSignIn />}
       </Container>
     </>
   );
