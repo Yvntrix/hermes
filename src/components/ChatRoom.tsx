@@ -1,5 +1,6 @@
 import { Center, Loader, ScrollArea, Stack } from "@mantine/core";
-import { useViewportSize } from "@mantine/hooks";
+import { useElementSize, useViewportSize } from "@mantine/hooks";
+import { useEffect } from "react";
 import { useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore } from "../lib/firebase";
@@ -14,15 +15,21 @@ const ChatRoom = () => {
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
 
   const [loading, setloading] = useState(true);
-  const { height, width } = useViewportSize();
+
   const dummy = useRef<HTMLDivElement>(null);
-  setTimeout(() => {
-    setloading(false);
-  }, 500);
+  useEffect(() => {
+    setTimeout(() => {
+      setloading(false);
+    }, 500);
+    setTimeout(() => {
+      goBot();
+    }, 100);
+  });
 
   function goBot() {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
   }
+  const { ref, width, height } = useElementSize();
   return (
     <>
       {loading ? (
@@ -31,18 +38,15 @@ const ChatRoom = () => {
         </Center>
       ) : (
         <>
-          <Stack sx={{ flexGrow: 1 }}>
+          <Stack ref={ref} sx={{ flexGrow: 1 }}>
             <ScrollArea
               sx={{
-                height: height - 155,
+                height: height,
               }}
             >
               <Stack>
                 {messages &&
                   messages.map((msg, id) => {
-                    if (id === messages.length - 1) {
-                      goBot();
-                    }
                     return <ChatMessage key={id} message={msg} />;
                   })}
                 <div ref={dummy}></div>
