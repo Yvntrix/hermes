@@ -1,10 +1,10 @@
 import { ActionIcon, Group, TextInput } from "@mantine/core";
+import { getHotkeyHandler } from "@mantine/hooks";
 import { serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Send } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
-import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
 interface prop {
   fn: () => void;
 }
@@ -37,13 +37,17 @@ const ChatBox = ({ fn }: prop) => {
           onChange={(event) => setValue(event.currentTarget.value)}
           sx={{ flexGrow: 1 }}
           placeholder="Say Something Nice "
-          onKeyDown={getHotkeyHandler([["Enter", sendMessage]])}
+          onKeyDown={
+            !/\S/.test(value)
+              ? undefined
+              : getHotkeyHandler([["Enter", sendMessage]])
+          }
         />
         <ActionIcon
           onClick={() => sendMessage()}
           variant="hover"
           size="lg"
-          disabled={value.length < 1 ? true : false}
+          disabled={!/\S/.test(value) ? true : value.length < 2 ? true : false}
         >
           <Send />
         </ActionIcon>

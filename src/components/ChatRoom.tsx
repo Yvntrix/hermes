@@ -1,7 +1,5 @@
-import { Center, Divider, Loader, ScrollArea, Stack } from "@mantine/core";
-import { useElementSize, useViewportSize } from "@mantine/hooks";
-import { useEffect } from "react";
-import { useRef, useState } from "react";
+import { Center, Loader, ScrollArea, Stack } from "@mantine/core";
+import { useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
@@ -37,7 +35,7 @@ const ChatRoom = () => {
         </Center>
       ) : (
         <>
-          <Stack sx={{ height: "84vh" }}>
+          <Stack sx={{ height: "84vh" }} pt="xs">
             <ScrollArea>
               <Stack>
                 {messages &&
