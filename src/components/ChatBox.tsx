@@ -5,7 +5,10 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Send } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import { getHotkeyHandler, useHotkeys } from "@mantine/hooks";
-const ChatBox = () => {
+interface prop {
+  fn: () => void;
+}
+const ChatBox = ({ fn }: prop) => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
 
@@ -14,6 +17,7 @@ const ChatBox = () => {
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
   let mess = "";
   const sendMessage = async () => {
+    fn();
     mess = value;
     setValue("");
     //@ts-expect-error
