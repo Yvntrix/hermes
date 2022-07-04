@@ -31,7 +31,7 @@ const ChatBox = ({ fn }: prop) => {
   };
   return (
     <>
-      <Group position="right" sx={{ display: "flex" }} p="sm">
+      <Group position="right" sx={{ display: "flex", height: "8vh" }} p="sm">
         <TextInput
           value={value}
           onChange={(event) => setValue(event.currentTarget.value)}

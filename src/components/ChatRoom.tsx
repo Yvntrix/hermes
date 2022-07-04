@@ -1,4 +1,4 @@
-import { Center, Loader, ScrollArea, Stack } from "@mantine/core";
+import { Center, Divider, Loader, ScrollArea, Stack } from "@mantine/core";
 import { useElementSize, useViewportSize } from "@mantine/hooks";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
@@ -29,17 +29,16 @@ const ChatRoom = () => {
   function goBot() {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
   }
-  const { ref, width, height } = useElementSize();
   return (
     <>
       {loading ? (
-        <Center ref={ref} sx={{ flexGrow: 1 }}>
+        <Center sx={{ flexGrow: 1 }}>
           <Loader color="grape" />
         </Center>
       ) : (
         <>
-          <Stack sx={{ height: height }}>
-            <ScrollArea sx={{ height: height }}>
+          <Stack sx={{ height: "84vh" }}>
+            <ScrollArea>
               <Stack>
                 {messages &&
                   messages.map((msg, id) => {
@@ -48,8 +47,8 @@ const ChatRoom = () => {
                 <div ref={dummy}></div>
               </Stack>
             </ScrollArea>
-            <ChatBox fn={goBot} />
           </Stack>
+          <ChatBox fn={goBot} />
         </>
       )}
     </>

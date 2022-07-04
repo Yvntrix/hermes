@@ -5,7 +5,7 @@ import { auth } from "../lib/firebase";
 const NavBar = () => {
   return (
     <>
-      <Paper radius={0}>
+      <Paper radius={0} sx={{ height: "8vh" }}>
         <Group position="apart" p="sm">
           <Text
             variant="gradient"
@@ -25,7 +25,6 @@ const NavBar = () => {
             ""
           )}
         </Group>
-     
       </Paper>
     </>
   );

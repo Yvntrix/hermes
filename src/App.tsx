@@ -25,7 +25,7 @@ function App() {
         ) : (
           <>
             <NavBar />
-            <Divider my="sm" />
+           
             {user ? <ChatRoom /> : <GoogleSignIn />}
           </>
         )}
