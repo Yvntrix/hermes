@@ -1,4 +1,12 @@
-import { Button, Divider, Group, Paper, Text, Title } from "@mantine/core";
+import {
+  Button,
+  Divider,
+  Group,
+  Paper,
+  Text,
+  Title,
+  UnstyledButton,
+} from "@mantine/core";
 import { Logout, MessageCircle, Send } from "tabler-icons-react";
 import { auth } from "../lib/firebase";
 
@@ -15,12 +23,16 @@ const NavBar = () => {
             gradient={{ from: "yellow", to: "orange", deg: 90 }}
           >
             <Group align="center">
-              <Title>Hermes</Title>
+              <UnstyledButton<"a"> component="a" href="/">
+                <Title>Hermes</Title>
+              </UnstyledButton>
               <MessageCircle color="orange" />
             </Group>
           </Text>
           {auth.currentUser ? (
-            <Button
+            <Button<"a">
+              component="a"
+              href="/"
               variant="default"
               leftIcon={<Logout />}
               onClick={() => auth.signOut()}

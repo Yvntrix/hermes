@@ -1,7 +1,8 @@
 import { Center, Loader, ScrollArea, Stack } from "@mantine/core";
+import { serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { firestore } from "../lib/firebase";
+import { auth, firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
 
@@ -16,6 +17,7 @@ const ChatRoom = () => {
 
   const dummy = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    setUser();
     setTimeout(() => {
       setloading(false);
     }, 500);
@@ -23,6 +25,28 @@ const ChatRoom = () => {
       goBot();
     }, 100);
   });
+
+  const setUser = async () => {
+    //@ts-expect-error
+    const { uid, photoURL, displayName, email } = auth.currentUser;
+    const usersRef = firestore.collection("users").doc(uid);
+
+    await usersRef.get().then(async (snap) => {
+      if (snap.exists) {
+        await updateDoc(usersRef, {
+          name: displayName,
+          photo: photoURL,
+        });
+      } else {
+        await usersRef.set({
+          name: displayName,
+          photo: photoURL,
+          email: email,
+          dateJoined: serverTimestamp(),
+        });
+      }
+    });
+  };
 
   function goBot() {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,7 +60,7 @@ const ChatRoom = () => {
       ) : (
         <>
           <Stack sx={{ height: "84vh" }} pt="xs">
-            <ScrollArea>
+            <ScrollArea p="xs" scrollbarSize={3}>
               <Stack>
                 {messages &&
                   messages.map((msg, id) => {

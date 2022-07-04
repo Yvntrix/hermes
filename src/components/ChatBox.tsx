@@ -12,9 +12,6 @@ const ChatBox = ({ fn }: prop) => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
 
-  const query = messagesRef.orderBy("createdAt").limit(25);
-
-  const [messages] = useCollectionData(query as any, { idField: "id" } as any);
   let mess = "";
   const sendMessage = async () => {
     fn();

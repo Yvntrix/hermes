@@ -1,10 +1,9 @@
-import { Alert, Avatar, Badge, Group, Paper } from "@mantine/core";
+import { Alert, Avatar, Group } from "@mantine/core";
 import { auth } from "../lib/firebase";
 
 const ChatMessage = (props: any) => {
   const { text, uid, photoURL } = props.message;
-  // @ts-expect-error
-  const message = uid === auth.currentUser.uid ? "right" : "left";
+  const message = uid === auth.currentUser?.uid ? "right" : "left";
   let color;
   if (uid == "4d43TqC5jRMhqOM7hcitTmx4mde2") {
     color = "yellow";
@@ -20,21 +19,16 @@ const ChatMessage = (props: any) => {
   return (
     <>
       <Group position={message} spacing="xs">
-        {message == "right" ? (
-          <>
-            <Alert color={color} radius="xl">
-              {text}
-            </Alert>
-            <Avatar src={photoURL} radius="xl" />
-          </>
-        ) : (
-          <>
-            <Avatar src={photoURL} radius="xl" />
-            <Alert color={color} radius="xl">
-              {text}
-            </Alert>
-          </>
-        )}
+        <Avatar<"a">
+          component="a"
+          href={`/user/` + uid}
+          src={photoURL}
+          radius="xl"
+          hidden={message == "right" ? true : false}
+        />
+        <Alert color={color} radius="xl">
+          {text}
+        </Alert>
       </Group>
     </>
   );
