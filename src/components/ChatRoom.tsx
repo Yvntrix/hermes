@@ -33,17 +33,13 @@ const ChatRoom = () => {
   return (
     <>
       {loading ? (
-        <Center sx={{ flexGrow: 1 }}>
+        <Center ref={ref} sx={{ flexGrow: 1 }}>
           <Loader color="grape" />
         </Center>
       ) : (
         <>
-          <Stack ref={ref} sx={{ flexGrow: 1 }}>
-            <ScrollArea
-              sx={{
-                height: height,
-              }}
-            >
+          <Stack sx={{ height: height }}>
+            <ScrollArea sx={{ height: height }}>
               <Stack>
                 {messages &&
                   messages.map((msg, id) => {
@@ -52,9 +48,8 @@ const ChatRoom = () => {
                 <div ref={dummy}></div>
               </Stack>
             </ScrollArea>
+            <ChatBox fn={goBot} />
           </Stack>
-
-          <ChatBox fn={goBot} />
         </>
       )}
     </>
