@@ -10,7 +10,7 @@ import ChatMessage from "./ChatMessage";
 const ChatRoom = () => {
   const messagesRef = firestore.collection("messages");
 
-  const query = messagesRef.orderBy("createdAt").limitToLast(50);
+  const query = messagesRef.orderBy("createdAt");
 
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
 
