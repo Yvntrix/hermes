@@ -5,6 +5,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
+
 import Loading from "./Loading";
 
 const ChatRoom = () => {
@@ -26,6 +27,7 @@ const ChatRoom = () => {
       goBot();
     }, 100);
   });
+  
 
   const setUser = async () => {
     //@ts-expect-error
@@ -58,7 +60,7 @@ const ChatRoom = () => {
       ) : (
         <>
           <Stack sx={{ height: "84vh" }} pt="xs">
-            <ScrollArea p="xs" scrollbarSize={3}>
+            <ScrollArea p="xs" scrollbarSize={0.2}>
               <Stack>
                 {messages &&
                   messages.map((msg, id) => {

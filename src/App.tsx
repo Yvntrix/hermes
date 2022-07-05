@@ -48,6 +48,7 @@ function App() {
           withNormalizeCSS
         >
           <Container
+            p={0}
             sx={{
               minHeight: "100vh",
               display: "flex",

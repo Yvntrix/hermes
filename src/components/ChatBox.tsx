@@ -3,8 +3,9 @@ import { getHotkeyHandler } from "@mantine/hooks";
 import { serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { Send } from "tabler-icons-react";
+import { MoodHappy, Send } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
+
 interface prop {
   fn: () => void;
 }
@@ -34,6 +35,11 @@ const ChatBox = ({ fn }: prop) => {
           onChange={(event) => setValue(event.currentTarget.value)}
           sx={{ flexGrow: 1 }}
           placeholder="Say Something Nice "
+          rightSection={
+            <ActionIcon>
+              <MoodHappy />
+            </ActionIcon>
+          }
           onKeyDown={
             !/\S/.test(value)
               ? undefined

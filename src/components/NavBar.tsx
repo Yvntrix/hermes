@@ -1,9 +1,10 @@
 import {
-  Avatar, Group,
+  Avatar,
+  Group,
   Paper,
   Text,
   Title,
-  UnstyledButton
+  UnstyledButton,
 } from "@mantine/core";
 import { MessageCircle } from "tabler-icons-react";
 import { auth } from "../lib/firebase";
@@ -38,7 +39,7 @@ const NavBar = () => {
               <UnstyledButton<"a"> component="a" href="/">
                 <Title>Hermes</Title>
               </UnstyledButton>
-              <MessageCircle color="#4dabf7" />
+              <MessageCircle color="#4dabf7" size={30} />
             </Group>
           </Text>
           <DarkMode />
