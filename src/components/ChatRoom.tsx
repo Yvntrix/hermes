@@ -5,6 +5,7 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
+import Loading from "./Loading";
 
 const ChatRoom = () => {
   const messagesRef = firestore.collection("messages");
@@ -54,9 +55,7 @@ const ChatRoom = () => {
   return (
     <>
       {loading ? (
-        <Center sx={{ flexGrow: 1 }}>
-          <Loader color="grape" />
-        </Center>
+        <Loading />
       ) : (
         <>
           <Stack sx={{ height: "84vh" }} pt="xs">

@@ -1,9 +1,11 @@
 import {
   ActionIcon,
   Avatar,
+  Button,
   Center,
   Divider,
   Group,
+  Kbd,
   Loader,
   Paper,
   ScrollArea,
@@ -13,10 +15,13 @@ import {
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ChevronLeft } from "tabler-icons-react";
+import { ChevronLeft, Logout } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import NotFound from "./404";
 import ChatMessage from "./ChatMessage";
+import GoogleSignIn from "./GoogleSignIn";
+import Loading from "./Loading";
+import NotLogin from "./NotLogin";
 
 const UserProfile = () => {
   let { uid } = useParams();
@@ -29,8 +34,11 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [no, setNo] = useState(true);
   useEffect(() => {
-    getInfo();
-    getMessages();
+    console.log(auth.currentUser);
+    if (auth.currentUser) {
+      getInfo();
+      getMessages();
+    }
   }, []);
   function getInfo() {
     firestore
@@ -64,43 +72,62 @@ const UserProfile = () => {
 
   return (
     <>
-      {loading ? (
-        <Center sx={{ flexGrow: 1 }}>
-          <Loader color="grape" />
-        </Center>
+      {auth.currentUser ? (
+        loading ? (
+          <Loading />
+        ) : (
+          <Stack sx={{ height: "84vh" }} pt="xs">
+            {auth.currentUser.uid == uid ? (
+              <Group position="right">
+                <Button<"a">
+                  component="a"
+                  href="/"
+                  variant="default"
+                  leftIcon={<Logout />}
+                  onClick={() => auth.signOut()}
+                >
+                  Sign Out
+                </Button>
+              </Group>
+            ) : (
+              ""
+            )}
+            {!no ? (
+              details.map((info, id) => {
+                return (
+                  <Stack key={id} align="center">
+                    <Avatar src={info.photo} size="xl" radius="xl" />
+                    <Title order={2}>{info.name}</Title>
+                    <Paper sx={{ width: "100%" }}>
+                      <Text align="left">Messages Sent:</Text>
+                      <Divider my="sm" />
+                      <ScrollArea sx={{ height: "50vh" }}>
+                        <Stack
+                          align={
+                            uid == auth.currentUser?.uid
+                              ? "flex-end"
+                              : "flex-start"
+                          }
+                        >
+                          {mes.map((messages, id) => {
+                            return <ChatMessage key={id} message={messages} />;
+                          })}
+                        </Stack>
+                      </ScrollArea>
+                      <Divider my="sm" />
+                    </Paper>
+                  </Stack>
+                );
+              })
+            ) : (
+              <NotFound />
+            )}
+          </Stack>
+        )
       ) : (
-        <Stack sx={{ height: "84vh" }} pt="xs">
-          {!no ? (
-            details.map((info, id) => {
-              return (
-                <Stack key={id} align="center">
-                  <Avatar src={info.photo} size="xl" radius="xl" />
-                  <Title order={2}>{info.name}</Title>
-                  <Paper sx={{ width: "70vw" }}>
-                    <Text align="left">Messages Sent:</Text>
-                    <Divider my="sm" />
-                    <ScrollArea sx={{ height: "50vh" }}>
-                      <Stack
-                        align={
-                          uid == auth.currentUser?.uid
-                            ? "flex-end"
-                            : "flex-start"
-                        }
-                      >
-                        {mes.map((messages, id) => {
-                          return <ChatMessage key={id} message={messages} />;
-                        })}
-                      </Stack>
-                    </ScrollArea>
-                    <Divider my="sm" />
-                  </Paper>
-                </Stack>
-              );
-            })
-          ) : (
-            <NotFound />
-          )}
-        </Stack>
+        <>
+          <NotLogin />
+        </>
       )}
     </>
   );

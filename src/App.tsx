@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/ChatRoom";
 
 import GoogleSignIn from "./components/GoogleSignIn";
+import Loading from "./components/Loading";
 import NavBar from "./components/NavBar";
 import UserProfile from "./components/UserProfile";
 import { auth } from "./lib/firebase";
@@ -21,9 +22,7 @@ function App() {
         sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
       >
         {loading ? (
-          <Center sx={{ flexGrow: 1 }}>
-            <Loader color="grape" />
-          </Center>
+          <Loading/>
         ) : (
           <>
             <NavBar />
