@@ -14,6 +14,8 @@ const ChatMessage = (props: any) => {
   useEffect(() => {
     if (createdAt != null) {
       conditions();
+    } else {
+      setMsgDate("Just now");
     }
   }, []);
   function conditions() {

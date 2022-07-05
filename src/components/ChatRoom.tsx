@@ -26,8 +26,7 @@ const ChatRoom = () => {
     setTimeout(() => {
       goBot();
     }, 100);
-  });
-  
+  }, [messages]);
 
   const setUser = async () => {
     //@ts-expect-error

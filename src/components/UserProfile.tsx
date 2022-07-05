@@ -24,7 +24,7 @@ const UserProfile = () => {
   let datas: any[] = [];
   const [mes, setMes] = useState<any[]>([]);
   let mess: any[] = [];
-  
+
   const messagesRef = firestore.collection("messages");
   const query = messagesRef.orderBy("createdAt");
   const [loading, setLoading] = useState(true);
@@ -74,7 +74,7 @@ const UserProfile = () => {
         loading ? (
           <Loading />
         ) : (
-          <Stack sx={{ height: "84vh" }} pt="xs">
+          <Stack sx={{ height: "84vh" }} p="xs">
             {auth.currentUser.uid == uid ? (
               <Group position="apart">
                 <Button<"a">
