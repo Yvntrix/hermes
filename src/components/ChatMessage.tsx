@@ -26,7 +26,7 @@ const ChatMessage = (props: any) => {
           radius="xl"
           hidden={message == "right" ? true : false}
         />
-        <Alert color={color} radius="xl">
+        <Alert color={color} radius="lg" p="xs" sx={{ maxWidth: "70%" }}>
           {text}
         </Alert>
       </Group>
