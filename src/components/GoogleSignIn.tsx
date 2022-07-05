@@ -1,8 +1,7 @@
-import { Alert, Button, Center, Stack, Text } from "@mantine/core";
-import { serverTimestamp } from "firebase/firestore";
+import { Alert, Button, Stack, Text } from "@mantine/core";
 import { useState } from "react";
-import { AlertCircle, BrandGoogle } from "tabler-icons-react";
-import { auth, firestore, googleAuthProvider } from "../lib/firebase";
+import { BrandGoogle } from "tabler-icons-react";
+import { auth, googleAuthProvider } from "../lib/firebase";
 
 const GoogleSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -13,10 +12,18 @@ const GoogleSignIn = () => {
   return (
     <>
       <Stack align="center" spacing="md" p="xs">
-        <Alert icon={<AlertCircle size={16} />} title="Warning" color="yellow">
+        <Alert title="Hello there!" color="blue">
           <Text weight={600}>
-            Do not violate the community guidelines or you will be banned for
-            life!
+            Hermes is a simple chat app made with ReactTs, MantineUI, and
+            Firebase by{" "}
+            <Text
+              variant="link"
+              component="a"
+              href="https://github.com/Yvntrix"
+            >
+              Yvntrix
+            </Text>{" "}
+            .
           </Text>
         </Alert>
         <Button

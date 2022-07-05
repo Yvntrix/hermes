@@ -6,19 +6,18 @@ const ChatMessage = (props: any) => {
   const message = uid === auth.currentUser?.uid ? "right" : "left";
   let color;
   if (uid == "4d43TqC5jRMhqOM7hcitTmx4mde2") {
-    color = "yellow";
+    color = "violet";
   } else {
     if (message == "right") {
-      color = "indigo";
+      color = "yellow";
     }
     if (message == "left") {
       color = "gray";
     }
   }
-
   return (
     <>
-      <Group position={message} spacing="xs">
+      <Group position={message} spacing="xs" align="flex-start" noWrap>
         <Avatar<"a">
           component="a"
           href={`/user/` + uid}
@@ -26,7 +25,7 @@ const ChatMessage = (props: any) => {
           radius="xl"
           hidden={message == "right" ? true : false}
         />
-        <Alert color={color} radius="lg" p="xs" sx={{ maxWidth: "70%" }}>
+        <Alert color={color} radius="lg" py={5} sx={{ maxWidth: "85%" }}>
           {text}
         </Alert>
       </Group>

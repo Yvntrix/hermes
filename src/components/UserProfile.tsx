@@ -1,12 +1,8 @@
 import {
-  ActionIcon,
   Avatar,
   Button,
-  Center,
   Divider,
   Group,
-  Kbd,
-  Loader,
   Paper,
   ScrollArea,
   Stack,
@@ -19,7 +15,6 @@ import { ChevronLeft, Logout } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import NotFound from "./404";
 import ChatMessage from "./ChatMessage";
-import GoogleSignIn from "./GoogleSignIn";
 import Loading from "./Loading";
 import NotLogin from "./NotLogin";
 
@@ -34,11 +29,12 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [no, setNo] = useState(true);
   useEffect(() => {
-    console.log(auth.currentUser);
-    if (auth.currentUser) {
-      getInfo();
-      getMessages();
-    }
+    setTimeout(() => {
+      if (auth.currentUser) {
+        getInfo();
+        getMessages();
+      }
+    }, 500);
   }, []);
   function getInfo() {
     firestore
@@ -49,11 +45,12 @@ const UserProfile = () => {
         if (doc.exists) {
           datas.push(await doc.data());
           setDetails(datas);
-          setNo(false);
           setTimeout(() => {
+            setNo(false);
             setLoading(false);
           }, 500);
         } else {
+          console.log("tri");
           setLoading(false);
         }
       });
@@ -78,7 +75,15 @@ const UserProfile = () => {
         ) : (
           <Stack sx={{ height: "84vh" }} pt="xs">
             {auth.currentUser.uid == uid ? (
-              <Group position="right">
+              <Group position="apart">
+                <Button<"a">
+                  component="a"
+                  href="/"
+                  variant="default"
+                  leftIcon={<ChevronLeft />}
+                >
+                  Go Back
+                </Button>
                 <Button<"a">
                   component="a"
                   href="/"
@@ -90,7 +95,16 @@ const UserProfile = () => {
                 </Button>
               </Group>
             ) : (
-              ""
+              <Group position="left">
+                <Button<"a">
+                  component="a"
+                  href="/"
+                  variant="default"
+                  leftIcon={<ChevronLeft />}
+                >
+                  Go Back
+                </Button>
+              </Group>
             )}
             {!no ? (
               details.map((info, id) => {
@@ -102,13 +116,7 @@ const UserProfile = () => {
                       <Text align="left">Messages Sent:</Text>
                       <Divider my="sm" />
                       <ScrollArea sx={{ height: "50vh" }}>
-                        <Stack
-                          align={
-                            uid == auth.currentUser?.uid
-                              ? "flex-end"
-                              : "flex-start"
-                          }
-                        >
+                        <Stack p="xs">
                           {mes.map((messages, id) => {
                             return <ChatMessage key={id} message={messages} />;
                           })}

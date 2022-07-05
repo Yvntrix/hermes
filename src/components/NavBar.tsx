@@ -1,14 +1,13 @@
 import {
-  Avatar,
-  Button,
-  Group,
+  Avatar, Group,
   Paper,
   Text,
   Title,
-  UnstyledButton,
+  UnstyledButton
 } from "@mantine/core";
-import { Logout, MessageCircle } from "tabler-icons-react";
+import { MessageCircle } from "tabler-icons-react";
 import { auth } from "../lib/firebase";
+import DarkMode from "./DarkMode";
 
 const NavBar = () => {
   return (
@@ -20,17 +19,6 @@ const NavBar = () => {
           align="center"
           sx={{ height: "8vh", borderBottom: "1px solid #A6A7AB" }}
         >
-          <Text
-            variant="gradient"
-            gradient={{ from: "yellow", to: "orange", deg: 90 }}
-          >
-            <Group align="center">
-              <UnstyledButton<"a"> component="a" href="/">
-                <Title>Hermes</Title>
-              </UnstyledButton>
-              <MessageCircle color="orange" />
-            </Group>
-          </Text>
           {auth.currentUser ? (
             <Avatar<"a">
               component="a"
@@ -41,6 +29,19 @@ const NavBar = () => {
           ) : (
             ""
           )}
+
+          <Text
+            variant="gradient"
+            gradient={{ from: "grape", to: "cyan", deg: 90 }}
+          >
+            <Group align="center">
+              <UnstyledButton<"a"> component="a" href="/">
+                <Title>Hermes</Title>
+              </UnstyledButton>
+              <MessageCircle color="#4dabf7" />
+            </Group>
+          </Text>
+          <DarkMode />
         </Group>
       </Paper>
     </>

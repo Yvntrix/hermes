@@ -1,4 +1,4 @@
-import { Center, Loader, ScrollArea, Stack } from "@mantine/core";
+import { ScrollArea, Stack } from "@mantine/core";
 import { serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -31,7 +31,6 @@ const ChatRoom = () => {
     //@ts-expect-error
     const { uid, photoURL, displayName, email } = auth.currentUser;
     const usersRef = firestore.collection("users").doc(uid);
-
     await usersRef.get().then(async (snap) => {
       if (snap.exists) {
         await updateDoc(usersRef, {
