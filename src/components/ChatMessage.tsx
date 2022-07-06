@@ -1,8 +1,19 @@
-import { Alert, Avatar, Collapse, Group, Stack, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Alert,
+  Avatar,
+  Collapse,
+  Group,
+  Stack,
+  Text,
+  Tooltip,
+} from "@mantine/core";
 import dayjs from "dayjs";
 import { auth } from "../lib/firebase";
 import calendar from "dayjs/plugin/calendar";
 import { useEffect, useState } from "react";
+import { DotsVertical } from "tabler-icons-react";
+import { useHover } from "@mantine/hooks";
 
 const ChatMessage = (props: any) => {
   const { text, uid, photoURL, createdAt } = props.message;
@@ -19,7 +30,7 @@ const ChatMessage = (props: any) => {
     }
   }, []);
   function conditions() {
-    if (dayjs().diff(dayjs.unix(createdAt.seconds), "h") > 24) {
+    if (dayjs().diff(dayjs.unix(createdAt.seconds), "h") > 36) {
       setMsgDate(dayjs.unix(createdAt.seconds).format("MMMM D, YYYY h:mm A"));
     } else {
       setMsgDate(dayjs.unix(createdAt.seconds).calendar());
@@ -37,9 +48,16 @@ const ChatMessage = (props: any) => {
     }
   }
   const [opened, setOpen] = useState(false);
+  const { hovered, ref } = useHover();
   return (
     <>
-      <Group position={message} spacing="xs" align="flex-start" noWrap>
+      <Group
+        ref={ref}
+        position={message}
+        spacing="xs"
+        align="flex-start"
+        noWrap
+      >
         <Avatar<"a">
           component="a"
           href={`/user/` + uid}
@@ -48,7 +66,16 @@ const ChatMessage = (props: any) => {
           hidden={message == "right" ? true : false}
         />
         <Stack p={0} spacing={2} sx={{ maxWidth: "85%" }}>
-          <Group position={message}>
+          <Group position={message} spacing={3} align="center">
+            {hovered ? (
+              <ActionIcon radius="xl" color="dark" hidden={message == "left"}>
+                <Tooltip label="More" withArrow position="top">
+                  <DotsVertical size={16} />
+                </Tooltip>
+              </ActionIcon>
+            ) : (
+              ""
+            )}
             <Alert
               color={color}
               radius="lg"
@@ -57,6 +84,15 @@ const ChatMessage = (props: any) => {
             >
               {text}
             </Alert>
+            {hovered ? (
+              <ActionIcon radius="xl" color="dark" hidden={message == "right"}>
+                <Tooltip label="More" withArrow position="top">
+                  <DotsVertical size={16} />
+                </Tooltip>
+              </ActionIcon>
+            ) : (
+              ""
+            )}
           </Group>
           <Collapse in={opened} px="xs">
             {

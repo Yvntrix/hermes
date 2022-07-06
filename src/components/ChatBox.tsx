@@ -12,20 +12,21 @@ interface prop {
 const ChatBox = ({ fn }: prop) => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
-
+  const user = auth.currentUser;
   let mess = "";
   const sendMessage = async () => {
-    fn();
-    mess = value;
-    setValue("");
-    //@ts-expect-error
-    const { uid, photoURL } = auth.currentUser;
-    await messagesRef.add({
-      text: mess,
-      createdAt: serverTimestamp(),
-      uid,
-      photoURL,
-    });
+    if (user) {
+      fn();
+      mess = value;
+      setValue("");
+      const { uid, photoURL } = user;
+      await messagesRef.add({
+        text: mess,
+        createdAt: serverTimestamp(),
+        uid,
+        photoURL,
+      });
+    }
   };
   return (
     <>

@@ -17,6 +17,7 @@ import NotFound from "./404";
 import ChatMessage from "./ChatMessage";
 import Loading from "./Loading";
 import NotLogin from "./NotLogin";
+import QuotaReached from "./QuotaReached";
 
 const UserProfile = () => {
   let { uid } = useParams();
@@ -24,7 +25,7 @@ const UserProfile = () => {
   let datas: any[] = [];
   const [mes, setMes] = useState<any[]>([]);
   let mess: any[] = [];
-
+  const [quota, setQuota] = useState(false);
   const messagesRef = firestore.collection("messages");
   const query = messagesRef.orderBy("createdAt");
   const [loading, setLoading] = useState(true);
@@ -51,21 +52,32 @@ const UserProfile = () => {
             setLoading(false);
           }, 500);
         } else {
-          console.log("tri");
           setLoading(false);
         }
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+        setQuota(true);
       });
   }
 
   function getMessages() {
-    query.get().then(async (doc) => {
-      doc.forEach((snap) => {
-        if (uid == snap.data().uid) {
-          mess.push(snap.data());
-          setMes(mess);
-        }
+    query
+      .get()
+      .then(async (doc) => {
+        doc.forEach((snap) => {
+          if (uid == snap.data().uid) {
+            mess.push(snap.data());
+            setMes(mess);
+          }
+        });
+      })
+      .catch((e) => {
+        console.log(e);
+        setLoading(false);
+        setQuota(true);
       });
-    });
   }
 
   return (
@@ -73,6 +85,8 @@ const UserProfile = () => {
       {auth.currentUser ? (
         loading ? (
           <Loading />
+        ) : quota ? (
+          <QuotaReached />
         ) : (
           <Stack sx={{ height: "84vh" }} p="xs">
             {auth.currentUser.uid == uid ? (

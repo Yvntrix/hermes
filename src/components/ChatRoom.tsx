@@ -7,8 +7,27 @@ import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
 
 import Loading from "./Loading";
+import QuotaReached from "./QuotaReached";
 
 const ChatRoom = () => {
+  const converter = {
+    toFirestore(post: { text: any }) {
+      return {};
+    },
+    fromFirestore(
+      snapshot: { data: (arg0: any) => any; id: any },
+      options: any
+    ) {
+      const data = snapshot.data(options);
+      return {
+        id: snapshot.id,
+        text: data.text,
+        uid: data.uid,
+        photoURL: data.photoURL,
+        createdAt: data.createdAt,
+      };
+    },
+  };
   const messagesRef = firestore.collection("messages");
 
   const query = messagesRef.orderBy("createdAt");
@@ -16,8 +35,9 @@ const ChatRoom = () => {
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
 
   const [loading, setloading] = useState(true);
-
+  const [quota, setQuota] = useState(false);
   const dummy = useRef<HTMLDivElement>(null);
+  const user = auth.currentUser;
   useEffect(() => {
     setUser();
     setTimeout(() => {
@@ -26,27 +46,34 @@ const ChatRoom = () => {
     setTimeout(() => {
       goBot();
     }, 100);
-  }, [messages]);
+  }, []);
 
   const setUser = async () => {
-    //@ts-expect-error
-    const { uid, photoURL, displayName, email } = auth.currentUser;
-    const usersRef = firestore.collection("users").doc(uid);
-    await usersRef.get().then(async (snap) => {
-      if (snap.exists) {
-        await updateDoc(usersRef, {
-          name: displayName,
-          photo: photoURL,
+    if (user) {
+      const { uid, photoURL, displayName, email } = user;
+      const usersRef = firestore.collection("users").doc(uid);
+      await usersRef
+        .get()
+        .then(async (snap) => {
+          if (snap.exists) {
+            await updateDoc(usersRef, {
+              name: displayName,
+              photo: photoURL,
+            });
+          } else {
+            await usersRef.set({
+              name: displayName,
+              photo: photoURL,
+              email: email,
+              dateJoined: serverTimestamp(),
+            });
+          }
+        })
+        .catch((e) => {
+          console.log(e)
+          setQuota(true);
         });
-      } else {
-        await usersRef.set({
-          name: displayName,
-          photo: photoURL,
-          email: email,
-          dateJoined: serverTimestamp(),
-        });
-      }
-    });
+    }
   };
 
   function goBot() {
@@ -56,6 +83,8 @@ const ChatRoom = () => {
     <>
       {loading ? (
         <Loading />
+      ) : quota ? (
+        <QuotaReached />
       ) : (
         <>
           <Stack sx={{ height: "84vh" }} pt="xs">
