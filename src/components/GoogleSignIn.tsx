@@ -7,7 +7,11 @@ const GoogleSignIn = () => {
   const [loading, setLoading] = useState(false);
   const signInWithGoogle = async () => {
     setLoading(true);
-    await auth.signInWithPopup(googleAuthProvider);
+    try {
+      await auth.signInWithPopup(googleAuthProvider);
+    } catch (error) {
+      setLoading(false);
+    }
   };
   return (
     <>
