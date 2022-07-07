@@ -14,12 +14,7 @@ const NavBar = () => {
   return (
     <>
       <Paper radius={0}>
-        <Group
-          position="apart"
-          p="sm"
-          align="center"
-          sx={{ height: "8vh", borderBottom: "1px solid #A6A7AB" }}
-        >
+        <Group position="apart" p="sm" align="center" sx={{ height: "8vh" }}>
           {auth.currentUser ? (
             <Avatar<"a">
               component="a"

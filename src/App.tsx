@@ -16,14 +16,14 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/ChatRoom";
 
 import GoogleSignIn from "./components/GoogleSignIn";
+import Home from "./components/Home";
 import Loading from "./components/Loading";
 import NavBar from "./components/NavBar";
 import UserProfile from "./components/UserProfile";
 import { auth } from "./lib/firebase";
 
 function App() {
-  const [user] = useAuthState(auth as any);
-  const [loading, setloading] = useState(true);
+
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "mantine-color-scheme",
     defaultValue: "light",
@@ -34,12 +34,10 @@ function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   useHotkeys([["mod+J", () => toggleColorScheme()]]);
-  setTimeout(() => {
-    setloading(false);
-  }, 700);
+
   return (
     <>
-    <Toaster/>
+      <Toaster />
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
@@ -49,33 +47,7 @@ function App() {
           withGlobalStyles
           withNormalizeCSS
         >
-          <Container
-            p={0}
-            sx={{
-              minHeight: "100vh",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
-            {loading ? (
-              <Loading />
-            ) : (
-              <>
-                <NavBar />
-                <BrowserRouter>
-                  <Routes>
-                    <Route path={`/user/:uid`} element={<UserProfile />} />
-
-                    <Route
-                      path="/"
-                      element={user ? <ChatRoom /> : <GoogleSignIn />}
-                    ></Route>
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
-                </BrowserRouter>
-              </>
-            )}
-          </Container>
+          <Home />
         </MantineProvider>
       </ColorSchemeProvider>
     </>

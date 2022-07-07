@@ -1,39 +1,44 @@
-import {
-  ActionIcon,
-  Alert,
-  Collapse,
-  Group,
-  Stack,
-  Text,
-  TextInput,
-} from "@mantine/core";
+import { ActionIcon, Group, Stack, TextInput } from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
 import { serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import toast from "react-hot-toast";
 import { MoodHappy, Send } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 
-interface prop {
-  fn: () => void;
-}
-const ChatBox = ({ fn }: prop) => {
+const ChatBox = (props: any) => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
   const user = auth.currentUser;
   let mess = "";
   const sendMessage = async () => {
     if (user) {
-      fn();
-      mess = value;
-      setValue("");
-      const { uid, photoURL } = user;
-      await messagesRef.add({
-        text: mess,
-        createdAt: serverTimestamp(),
-        uid,
-        photoURL,
-      });
+      if (value.length > 100) {
+        toast.error("Must not exceed 100 characters");
+        setValue("");
+      } else {
+        props.fn();
+        mess = value;
+        setValue("");
+        const { uid, photoURL } = user;
+        if (props.id == "") {
+          await messagesRef.add({
+            text: mess,
+            createdAt: serverTimestamp(),
+            uid,
+            photoURL,
+          });
+        } else {
+          await messagesRef.add({
+            text: mess,
+            createdAt: serverTimestamp(),
+            repliedTo: props.id,
+            ruid: props.ruid,
+            uid,
+            photoURL,
+          });
+        }
+      }
     }
   };
 
@@ -45,7 +50,7 @@ const ChatBox = ({ fn }: prop) => {
             value={value}
             onChange={(event) => setValue(event.currentTarget.value)}
             sx={{ flexGrow: 1 }}
-            placeholder="Say Something Nice "
+            placeholder="Say something nice . . . "
             rightSection={
               <ActionIcon>
                 <MoodHappy />

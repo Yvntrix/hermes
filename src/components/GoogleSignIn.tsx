@@ -2,6 +2,7 @@ import { Alert, Button, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import { BrandGoogle } from "tabler-icons-react";
 import { auth, googleAuthProvider } from "../lib/firebase";
+import NavBar from "./NavBar";
 
 const GoogleSignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,7 @@ const GoogleSignIn = () => {
   };
   return (
     <>
+      <NavBar />
       <Stack align="center" spacing="md" p="xs">
         <Alert title="Hello there!" color="blue">
           <Text weight={600}>
