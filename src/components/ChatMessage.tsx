@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import { auth, firestore } from "../lib/firebase";
 import calendar from "dayjs/plugin/calendar";
 import { useEffect, useState } from "react";
-import { DotsVertical, Trash } from "tabler-icons-react";
+import { CornerUpLeft, DotsVertical, Trash } from "tabler-icons-react";
 import { useHover } from "@mantine/hooks";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
@@ -44,7 +44,7 @@ const ChatMessage = (props: any) => {
     if (uid == auth.currentUser?.uid) {
       updateDoc(doc(firestore, "messages", id), { deleted: true });
     } else {
-      toast.error("This didn't work.");
+      toast.error("This is not yours.");
     }
   }
 
@@ -60,11 +60,17 @@ const ChatMessage = (props: any) => {
   }
   const [opened, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
+  function reply() {
+    props.replyMessage(id);
 
+    // props.fn();
+  }
   return (
     <>
       <Group
-        onMouseEnter={() => setHovered(true)}
+        onMouseEnter={() =>
+          deleted == undefined ? setHovered(true) : undefined
+        }
         onMouseLeave={() => setHovered(false)}
         position={message}
         spacing="xs"
@@ -92,15 +98,19 @@ const ChatMessage = (props: any) => {
                   </ActionIcon>
                 }
               >
-                {
-                  <Menu.Item
-                    onClick={() => deleteMe()}
-                    color="red"
-                    icon={<Trash size={14} />}
-                  >
-                    Delete
-                  </Menu.Item>
-                }
+                <Menu.Item
+                  onClick={() => deleteMe()}
+                  color="red"
+                  icon={<Trash size={14} />}
+                >
+                  Delete
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => reply()}
+                  icon={<CornerUpLeft size={14} />}
+                >
+                  Reply
+                </Menu.Item>
               </Menu>
             ) : (
               ""
@@ -115,7 +125,7 @@ const ChatMessage = (props: any) => {
               {deleted == undefined ? (
                 text
               ) : (
-                <Text color={color} size="sm">
+                <Text color={color} size="xs">
                   Message removed
                 </Text>
               )}
@@ -132,15 +142,19 @@ const ChatMessage = (props: any) => {
                   </ActionIcon>
                 }
               >
-                {
-                  <Menu.Item
-                    onClick={() => deleteMe()}
-                    color="red"
-                    icon={<Trash size={14} />}
-                  >
-                    Delete
-                  </Menu.Item>
-                }
+                <Menu.Item
+                  onClick={() => deleteMe()}
+                  color="red"
+                  icon={<Trash size={14} />}
+                >
+                  Delete
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => reply()}
+                  icon={<CornerUpLeft size={14} />}
+                >
+                  Reply
+                </Menu.Item>
               </Menu>
             ) : (
               ""

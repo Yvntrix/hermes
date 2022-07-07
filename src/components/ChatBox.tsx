@@ -1,4 +1,12 @@
-import { ActionIcon, Group, TextInput } from "@mantine/core";
+import {
+  ActionIcon,
+  Alert,
+  Collapse,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { getHotkeyHandler } from "@mantine/hooks";
 import { serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
@@ -28,34 +36,39 @@ const ChatBox = ({ fn }: prop) => {
       });
     }
   };
+
   return (
     <>
-      <Group position="right" sx={{ display: "flex", height: "8vh" }} p="sm">
-        <TextInput
-          value={value}
-          onChange={(event) => setValue(event.currentTarget.value)}
-          sx={{ flexGrow: 1 }}
-          placeholder="Say Something Nice "
-          rightSection={
-            <ActionIcon>
-              <MoodHappy />
-            </ActionIcon>
-          }
-          onKeyDown={
-            !/\S/.test(value)
-              ? undefined
-              : getHotkeyHandler([["Enter", sendMessage]])
-          }
-        />
-        <ActionIcon
-          onClick={() => sendMessage()}
-          variant="hover"
-          size="lg"
-          disabled={!/\S/.test(value) ? true : value.length < 2 ? true : false}
-        >
-          <Send />
-        </ActionIcon>
-      </Group>
+      <Stack sx={{ height: "8vh" }} justify="center" p={0}>
+        <Group position="right" p="xs">
+          <TextInput
+            value={value}
+            onChange={(event) => setValue(event.currentTarget.value)}
+            sx={{ flexGrow: 1 }}
+            placeholder="Say Something Nice "
+            rightSection={
+              <ActionIcon>
+                <MoodHappy />
+              </ActionIcon>
+            }
+            onKeyDown={
+              !/\S/.test(value)
+                ? undefined
+                : getHotkeyHandler([["Enter", sendMessage]])
+            }
+          />
+          <ActionIcon
+            onClick={() => sendMessage()}
+            variant="hover"
+            size="lg"
+            disabled={
+              !/\S/.test(value) ? true : value.length < 2 ? true : false
+            }
+          >
+            <Send />
+          </ActionIcon>
+        </Group>
+      </Stack>
     </>
   );
 };

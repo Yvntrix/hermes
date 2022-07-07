@@ -1,5 +1,5 @@
-import { ScrollArea, Stack } from "@mantine/core";
-import { serverTimestamp, updateDoc } from "firebase/firestore";
+import { Alert, ScrollArea, Stack } from "@mantine/core";
+import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { auth, firestore } from "../lib/firebase";
@@ -10,11 +10,6 @@ import Loading from "./Loading";
 import QuotaReached from "./QuotaReached";
 
 const ChatRoom = () => {
-  const messagesRef = firestore.collection("messages");
-
-  const query = messagesRef.orderBy("createdAt");
-
-  const [messages] = useCollectionData(query as any, { idField: "id" } as any);
   const [mes, setMes] = useState<any[]>([]);
   let mess: any[] = [];
   const [loading, setloading] = useState(true);
@@ -108,6 +103,30 @@ const ChatRoom = () => {
   function goBot() {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
   }
+  const [replyInfo, setReplyInfo] = useState<any[]>([]);
+  let info: any[] = [];
+  function replyMessage(index: string) {
+    getMessage(index);
+  }
+
+  const getMessage = async (id: string) => {
+    const replySnap = await getDoc(doc(firestore, "messages", id));
+
+    const userSnap = await getDoc(
+      doc(firestore, "users", await replySnap.data()?.uid)
+    );
+    const reply = replySnap.data()?.text;
+    let name = "";
+    if (replySnap.data()?.uid == auth.currentUser?.uid) {
+      name = "yourself";
+    } else {
+      name = userSnap.data()?.name;
+    }
+    info.push({ text: reply, name: name });
+    setReplyInfo(info);
+    setHidden(false);
+  };
+  const [hidden, setHidden] = useState(true);
   return (
     <>
       {loading ? (
@@ -120,11 +139,35 @@ const ChatRoom = () => {
             <ScrollArea p="xs" scrollbarSize={0.2}>
               <Stack>
                 {mes.map((msg, id) => {
-                  return <ChatMessage key={id} message={msg} />;
+                  return (
+                    <ChatMessage
+                      key={id}
+                      message={msg}
+                      fn={replyMessage}
+                      replyMessage={replyMessage}
+                    />
+                  );
                 })}
               </Stack>
               <div ref={dummy}></div>
             </ScrollArea>
+            {replyInfo.map((data, id) => {
+              return (
+                <Alert
+                  key={id}
+                  sx={{ height: "20%" }}
+                  hidden={hidden}
+                  title={`Replying to ` + data.name}
+                  color="gray"
+                  p="xs"
+                  radius="xs"
+                  withCloseButton
+                  onClose={() => setHidden(true)}
+                >
+                  {data.text}
+                </Alert>
+              );
+            })}
           </Stack>
           <ChatBox fn={goBot} />
         </>
