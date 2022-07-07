@@ -54,7 +54,7 @@ const ChatMessage = (props: any) => {
   }
 
   if (uid == "4d43TqC5jRMhqOM7hcitTmx4mde2") {
-    color = "violet";
+    color = "teal";
   } else {
     if (message == "right") {
       color = "yellow";

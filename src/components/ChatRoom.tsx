@@ -31,7 +31,7 @@ const ChatRoom = () => {
   useEffect(() => {
     firestore
       .collection("messages")
-      .limit(25)
+      .limitToLast(30)
       .orderBy("createdAt")
       .onSnapshot((snap) => {
         snap.docChanges().forEach((change) => {
