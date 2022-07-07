@@ -31,6 +31,7 @@ const ChatRoom = () => {
   useEffect(() => {
     firestore
       .collection("messages")
+      .limit(25)
       .orderBy("createdAt")
       .onSnapshot((snap) => {
         snap.docChanges().forEach((change) => {
@@ -106,6 +107,7 @@ const ChatRoom = () => {
   function goBot() {
     dummy.current?.scrollIntoView({ behavior: "smooth" });
     setHidden(true);
+    setId("");
   }
   const [ruid, setRuid] = useState("");
   function replyMessage(index: string, uid: string) {
