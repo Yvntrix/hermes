@@ -11,6 +11,7 @@ import {
 import { useHotkeys, useLocalStorage } from "@mantine/hooks";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import ChatRoom from "./components/ChatRoom";
 
@@ -38,6 +39,7 @@ function App() {
   }, 700);
   return (
     <>
+    <Toaster/>
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}

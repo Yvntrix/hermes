@@ -10,42 +10,72 @@ import Loading from "./Loading";
 import QuotaReached from "./QuotaReached";
 
 const ChatRoom = () => {
-  const converter = {
-    toFirestore(post: { text: any }) {
-      return {};
-    },
-    fromFirestore(
-      snapshot: { data: (arg0: any) => any; id: any },
-      options: any
-    ) {
-      const data = snapshot.data(options);
-      return {
-        id: snapshot.id,
-        text: data.text,
-        uid: data.uid,
-        photoURL: data.photoURL,
-        createdAt: data.createdAt,
-      };
-    },
-  };
   const messagesRef = firestore.collection("messages");
 
   const query = messagesRef.orderBy("createdAt");
 
   const [messages] = useCollectionData(query as any, { idField: "id" } as any);
-
+  const [mes, setMes] = useState<any[]>([]);
+  let mess: any[] = [];
   const [loading, setloading] = useState(true);
   const [quota, setQuota] = useState(false);
   const dummy = useRef<HTMLDivElement>(null);
   const user = auth.currentUser;
   useEffect(() => {
+    firestore
+      .collection("messages")
+      .orderBy("createdAt")
+      .onSnapshot((snap) => {
+        snap.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            mess = [];
+            snap.docs.map((doc) =>
+              mess.push({
+                id: doc.id,
+                text: doc.data().text,
+                uid: doc.data().uid,
+                createdAt: doc.data().createdAt,
+                photoURL: doc.data().photoURL,
+                deleted: doc.data().deleted,
+              })
+            );
+          }
+          if (change.type === "modified") {
+            mess = [];
+            snap.docs.map((doc) =>
+              mess.push({
+                id: doc.id,
+                text: doc.data().text,
+                uid: doc.data().uid,
+                createdAt: doc.data().createdAt,
+                photoURL: doc.data().photoURL,
+                deleted: doc.data().deleted,
+              })
+            );
+          }
+          if (change.type === "removed") {
+            mess = [];
+            snap.docs.map((doc) =>
+              mess.push({
+                id: doc.id,
+                text: doc.data().text,
+                uid: doc.data().uid,
+                createdAt: doc.data().createdAt,
+                photoURL: doc.data().photoURL,
+                deleted: doc.data().deleted,
+              })
+            );
+          }
+        });
+        setMes(mess);
+        setTimeout(() => {
+          goBot();
+        }, 500);
+      });
     setUser();
     setTimeout(() => {
       setloading(false);
     }, 500);
-    setTimeout(() => {
-      goBot();
-    }, 100);
   }, []);
 
   const setUser = async () => {
@@ -70,7 +100,6 @@ const ChatRoom = () => {
           }
         })
         .catch((e) => {
-          console.log(e)
           setQuota(true);
         });
     }
@@ -90,12 +119,11 @@ const ChatRoom = () => {
           <Stack sx={{ height: "84vh" }} pt="xs">
             <ScrollArea p="xs" scrollbarSize={0.2}>
               <Stack>
-                {messages &&
-                  messages.map((msg, id) => {
-                    return <ChatMessage key={id} message={msg} />;
-                  })}
-                <div ref={dummy}></div>
+                {mes.map((msg, id) => {
+                  return <ChatMessage key={id} message={msg} />;
+                })}
               </Stack>
+              <div ref={dummy}></div>
             </ScrollArea>
           </Stack>
           <ChatBox fn={goBot} />

@@ -56,7 +56,6 @@ const UserProfile = () => {
         }
       })
       .catch((e) => {
-        console.log(e);
         setLoading(false);
         setQuota(true);
       });
@@ -74,7 +73,6 @@ const UserProfile = () => {
         });
       })
       .catch((e) => {
-        console.log(e);
         setLoading(false);
         setQuota(true);
       });
