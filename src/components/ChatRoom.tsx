@@ -1,6 +1,7 @@
-import { Alert, ScrollArea, Stack } from "@mantine/core";
+import { ActionIcon, Alert, Group, ScrollArea, Stack } from "@mantine/core";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
 import ChatMessage from "./ChatMessage";
@@ -19,7 +20,7 @@ const ChatRoom = () => {
   const [replyInfo, setReplyInfo] = useState<any[]>([]);
   let info: any[] = [];
   const [id, setId] = useState("");
-  const [lastKey, setLastKey] = useState<any>();
+
   useEffect(() => {
     setUser();
     getMessages();
@@ -29,7 +30,7 @@ const ChatRoom = () => {
     firestore
       .collection("messages")
       .orderBy("createdAt", "desc")
-      .limit(25)
+      .limit(100)
       .onSnapshot((snap) => {
         snap.docChanges().forEach((change) => {
           if (change.type === "added") {
@@ -44,8 +45,8 @@ const ChatRoom = () => {
                 deleted: doc.data().deleted,
                 repliedTo: doc.data().repliedTo,
                 ruid: doc.data().ruid,
+                rtext: doc.data().rtext,
               });
-              setLastKey(snap.docs[snap.docs.length - 1]);
             });
           }
           if (change.type === "modified") {
@@ -60,8 +61,8 @@ const ChatRoom = () => {
                 deleted: doc.data().deleted,
                 repliedTo: doc.data().repliedTo,
                 ruid: doc.data().ruid,
+                rtext: doc.data().rtext,
               });
-              setLastKey(snap.docs[snap.docs.length - 1]);
             });
           }
         });
@@ -107,9 +108,9 @@ const ChatRoom = () => {
     setId("");
   }
   const [ruid, setRuid] = useState("");
-  function replyMessage(index: string, uid: string) {
-    getMessage(index);
-    setRuid(uid);
+  function replyMessage(params: any) {
+    getMessage(params.msgId);
+    setRuid(params);
   }
 
   const getMessage = async (id: string) => {
@@ -130,6 +131,7 @@ const ChatRoom = () => {
     setHidden(false);
   };
   const [hidden, setHidden] = useState(true);
+
   return (
     <>
       {loading ? (
@@ -140,8 +142,17 @@ const ChatRoom = () => {
         <>
           <NavBar />
           <Stack sx={{ height: "84vh" }} pt="xs">
-            <ScrollArea p="xs" scrollbarSize={0.2}>
+            <ScrollArea p="xs" scrollbarSize={1} sx={{ height: "84vh" }}>
               <Stack>
+                <Group position="center" pt="xs">
+                  <ActionIcon
+                    color="violet"
+                    sx={{ position: "absolute" }}
+                    onClick={goBot}
+                  >
+                    <ChevronDown />
+                  </ActionIcon>
+                </Group>
                 {mes.map((msg, id) => {
                   return (
                     <ChatMessage
@@ -182,5 +193,4 @@ const ChatRoom = () => {
     </>
   );
 };
-
 export default ChatRoom;

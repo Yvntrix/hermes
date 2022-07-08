@@ -33,7 +33,8 @@ const ChatBox = (props: any) => {
             text: mess,
             createdAt: serverTimestamp(),
             repliedTo: props.id,
-            ruid: props.ruid,
+            ruid: props.ruid.senderUid,
+            rtext: props.ruid.msgText,
             uid,
             photoURL,
           });
@@ -64,6 +65,8 @@ const ChatBox = (props: any) => {
             }
             onKeyDown={
               !/\S/.test(value)
+                ? undefined
+                : value.length < 2
                 ? undefined
                 : getHotkeyHandler([["Enter", sendMessage]])
             }

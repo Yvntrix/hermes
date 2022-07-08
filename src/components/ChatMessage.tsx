@@ -17,8 +17,17 @@ import { CornerUpLeft, DotsVertical, Trash } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 
 const ChatMessage = (props: any) => {
-  const { text, uid, photoURL, createdAt, id, deleted, repliedTo, ruid } =
-    props.message;
+  const {
+    text,
+    uid,
+    photoURL,
+    createdAt,
+    id,
+    deleted,
+    repliedTo,
+    ruid,
+    rtext,
+  } = props.message;
   const message = uid === auth.currentUser?.uid ? "right" : "left";
   let color;
   const [msgDate, setMsgDate] = useState("");
@@ -62,8 +71,7 @@ const ChatMessage = (props: any) => {
     }
   }
   const [name, setName] = useState("");
-  const [name1, setName1] = useState("");
-  const [rep, setRep] = useState([]);
+  const [sender, setSender] = useState("");
   const [repDel, setRepDel] = useState(undefined);
 
   const getUser = async () => {
@@ -71,17 +79,21 @@ const ChatMessage = (props: any) => {
     setName(userSnap.data()?.name);
 
     const userSnap1 = await getDoc(doc(firestore, "users", uid));
-    setName1(userSnap1.data()?.name);
+    setSender(userSnap1.data()?.name);
 
-    const replySnap = await getDoc(doc(firestore, "messages", repliedTo));
-    setRep(replySnap.data()?.text);
-    setRepDel(replySnap.data()?.deleted);
+
+    firestore
+      .collection("messages")
+      .doc(repliedTo)
+      .onSnapshot((snap) => {
+        setRepDel(snap.data()?.deleted);
+      });
   };
 
   const [opened, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   function reply() {
-    props.replyMessage(id, uid);
+    props.replyMessage({ msgId: id, senderUid: uid, msgText: text });
   }
   return (
     <>
@@ -128,7 +140,7 @@ const ChatMessage = (props: any) => {
                 >
                   <CornerUpLeft size={15} />
                   <Text size="xs" align={message} p={0}>
-                    {uid == auth.currentUser?.uid ? "You" : name1} replied to{" "}
+                    {uid == auth.currentUser?.uid ? "You" : sender} replied to{" "}
                     {ruid == uid
                       ? uid == auth.currentUser?.uid
                         ? "yourself"
@@ -147,7 +159,7 @@ const ChatMessage = (props: any) => {
                     py="xs"
                   >
                     {repDel == undefined ? (
-                      rep
+                      rtext
                     ) : (
                       <Text color="gray" size="xs">
                         Message removed
