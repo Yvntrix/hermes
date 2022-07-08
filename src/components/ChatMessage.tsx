@@ -7,16 +7,14 @@ import {
   Menu,
   Stack,
   Text,
-  Tooltip,
 } from "@mantine/core";
 import dayjs from "dayjs";
-import { auth, firestore } from "../lib/firebase";
 import calendar from "dayjs/plugin/calendar";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { CornerUpLeft, DotsVertical, Trash } from "tabler-icons-react";
-import { useHover } from "@mantine/hooks";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { CornerUpLeft, DotsVertical, Trash } from "tabler-icons-react";
+import { auth, firestore } from "../lib/firebase";
 
 const ChatMessage = (props: any) => {
   const { text, uid, photoURL, createdAt, id, deleted, repliedTo, ruid } =
@@ -65,7 +63,8 @@ const ChatMessage = (props: any) => {
   }
   const [name, setName] = useState("");
   const [name1, setName1] = useState("");
-  const [rep, setRep] = useState("");
+  const [rep, setRep] = useState([]);
+  const [repDel, setRepDel] = useState(undefined);
 
   const getUser = async () => {
     const userSnap = await getDoc(doc(firestore, "users", ruid));
@@ -76,6 +75,7 @@ const ChatMessage = (props: any) => {
 
     const replySnap = await getDoc(doc(firestore, "messages", repliedTo));
     setRep(replySnap.data()?.text);
+    setRepDel(replySnap.data()?.deleted);
   };
 
   const [opened, setOpen] = useState(false);
@@ -103,36 +103,7 @@ const ChatMessage = (props: any) => {
           hidden={message == "right" ? true : false}
         />
         <Stack p={0} spacing={2} sx={{ maxWidth: "80%" }}>
-          <Group position={message} spacing={3} align="center" noWrap>
-            {hovered ? (
-              <Menu
-                position="top"
-                placement="center"
-                size="xs"
-                hidden={message == "left"}
-                control={
-                  <ActionIcon radius="xl" color="dark">
-                    <DotsVertical size={20} />
-                  </ActionIcon>
-                }
-              >
-                <Menu.Item
-                  onClick={() => deleteMe()}
-                  color="red"
-                  icon={<Trash size={14} />}
-                >
-                  Delete
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => reply()}
-                  icon={<CornerUpLeft size={14} />}
-                >
-                  Reply
-                </Menu.Item>
-              </Menu>
-            ) : (
-              ""
-            )}
+          <Group position={message}>
             <Stack p={0} spacing={0} m={0}>
               <Stack
                 p={0}
@@ -148,11 +119,12 @@ const ChatMessage = (props: any) => {
               >
                 <Group
                   align="center"
-                  position="center"
-                  style={{ position: "relative", bottom: -10 }}
+                  position={message}
+                  style={{ position: "relative", bottom: -8 }}
                   p={0}
                   spacing={0}
                   m={0}
+                  noWrap
                 >
                   <CornerUpLeft size={15} />
                   <Text size="xs" align={message} p={0}>
@@ -170,21 +142,59 @@ const ChatMessage = (props: any) => {
                   <Alert
                     sx={{ bottom: "-10px", zIndex: -1 }}
                     color="gray"
+                    variant={repDel == undefined ? "light" : "outline"}
                     radius="lg"
                     py="xs"
                   >
-                    {rep}
+                    {repDel == undefined ? (
+                      rep
+                    ) : (
+                      <Text color="gray" size="xs">
+                        Message removed
+                      </Text>
+                    )}
                   </Alert>
                 </Group>
               </Stack>
-              <Group position={message}>
+              <Group position={message} spacing={3} align="center" noWrap>
+                {hovered ? (
+                  <Menu
+                    position="top"
+                    placement="center"
+                    size="xs"
+                    hidden={message == "left"}
+                    control={
+                      <ActionIcon radius="xl" color="dark">
+                        <DotsVertical size={20} />
+                      </ActionIcon>
+                    }
+                  >
+                    <Menu.Item
+                      onClick={() => deleteMe()}
+                      color="red"
+                      icon={<Trash size={14} />}
+                    >
+                      Delete
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={() => reply()}
+                      icon={<CornerUpLeft size={14} />}
+                    >
+                      Reply
+                    </Menu.Item>
+                  </Menu>
+                ) : (
+                  ""
+                )}
                 <Alert
                   sx={{}}
                   color={color}
                   radius="lg"
                   py="xs"
                   variant={deleted == undefined ? "light" : "outline"}
-                  onClick={() => setOpen((o) => !o)}
+                  onClick={() => {
+                    setOpen((o) => !o);
+                  }}
                 >
                   {deleted == undefined ? (
                     text
@@ -194,37 +204,37 @@ const ChatMessage = (props: any) => {
                     </Text>
                   )}
                 </Alert>
+                {hovered ? (
+                  <Menu
+                    position="top"
+                    placement="center"
+                    hidden={message == "right"}
+                    size="xs"
+                    control={
+                      <ActionIcon radius="xl" color="dark">
+                        <DotsVertical size={20} />
+                      </ActionIcon>
+                    }
+                  >
+                    <Menu.Item
+                      onClick={() => deleteMe()}
+                      color="red"
+                      icon={<Trash size={14} />}
+                    >
+                      Delete
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={() => reply()}
+                      icon={<CornerUpLeft size={14} />}
+                    >
+                      Reply
+                    </Menu.Item>
+                  </Menu>
+                ) : (
+                  ""
+                )}
               </Group>
             </Stack>
-            {hovered ? (
-              <Menu
-                position="top"
-                placement="center"
-                hidden={message == "right"}
-                size="xs"
-                control={
-                  <ActionIcon radius="xl" color="dark">
-                    <DotsVertical size={20} />
-                  </ActionIcon>
-                }
-              >
-                <Menu.Item
-                  onClick={() => deleteMe()}
-                  color="red"
-                  icon={<Trash size={14} />}
-                >
-                  Delete
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => reply()}
-                  icon={<CornerUpLeft size={14} />}
-                >
-                  Reply
-                </Menu.Item>
-              </Menu>
-            ) : (
-              ""
-            )}
           </Group>
           <Collapse in={opened} px="xs">
             {

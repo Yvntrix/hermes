@@ -52,7 +52,13 @@ const ChatBox = (props: any) => {
             sx={{ flexGrow: 1 }}
             placeholder="Say something nice . . . "
             rightSection={
-              <ActionIcon>
+              <ActionIcon
+                onClick={() =>
+                  toast("Not yet ready", {
+                    icon: "💔",
+                  })
+                }
+              >
                 <MoodHappy />
               </ActionIcon>
             }

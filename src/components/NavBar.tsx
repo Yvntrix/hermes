@@ -14,7 +14,13 @@ const NavBar = () => {
   return (
     <>
       <Paper radius={0}>
-        <Group position="apart" p="sm" align="center" sx={{ height: "8vh" }}>
+        <Group
+          position="apart"
+          p="sm"
+          align="center"
+          sx={{ height: "8vh" }}
+          noWrap
+        >
           {auth.currentUser ? (
             <Avatar<"a">
               component="a"
@@ -30,7 +36,7 @@ const NavBar = () => {
             variant="gradient"
             gradient={{ from: "grape", to: "cyan", deg: 90 }}
           >
-            <Group align="center">
+            <Group align="center" noWrap spacing={3}>
               <UnstyledButton<"a"> component="a" href="/">
                 <Title>Hermes</Title>
               </UnstyledButton>
