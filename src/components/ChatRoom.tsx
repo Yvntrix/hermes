@@ -1,6 +1,15 @@
-import { ActionIcon, Alert, Group, ScrollArea, Stack } from "@mantine/core";
+import {
+  ActionIcon,
+  Alert,
+  Group,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
 import { ChevronDown } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import ChatBox from "./ChatBox";
@@ -131,7 +140,11 @@ const ChatRoom = () => {
     setHidden(false);
   };
   const [hidden, setHidden] = useState(true);
-
+  const { ref, inView, entry } = useInView({
+    /* Optional options */
+    delay: 600,
+    threshold: 1,
+  });
   return (
     <>
       {loading ? (
@@ -144,15 +157,20 @@ const ChatRoom = () => {
           <Stack sx={{ height: "84vh" }} pt="xs">
             <ScrollArea p="xs" scrollbarSize={1} sx={{ height: "84vh" }}>
               <Stack>
-                <Group position="center" pt="xs">
-                  <ActionIcon
-                    color="violet"
-                    sx={{ position: "absolute" }}
-                    onClick={goBot}
+                <Group hidden={inView} position="center" pt="xs">
+                  <Paper
+                    shadow="md"
+                    radius="xl"
+                    withBorder
+                    p={0}
+                    sx={{ position: "absolute", top: "95%" }}
                   >
-                    <ChevronDown />
-                  </ActionIcon>
+                    <ActionIcon color="violet" radius="xl" onClick={goBot}>
+                      <ChevronDown />
+                    </ActionIcon>
+                  </Paper>
                 </Group>
+
                 {mes.map((msg, id) => {
                   return (
                     <ChatMessage
@@ -163,6 +181,7 @@ const ChatRoom = () => {
                   );
                 })}
               </Stack>
+              <div ref={ref}></div>
               <div ref={dummy}></div>
             </ScrollArea>
 

@@ -4,6 +4,7 @@ import {
   Avatar,
   Collapse,
   Group,
+  Loader,
   Menu,
   Stack,
   Text,
@@ -81,15 +82,16 @@ const ChatMessage = (props: any) => {
     const userSnap1 = await getDoc(doc(firestore, "users", uid));
     setSender(userSnap1.data()?.name);
 
-
-    firestore
+    await firestore
       .collection("messages")
       .doc(repliedTo)
       .onSnapshot((snap) => {
         setRepDel(snap.data()?.deleted);
+        setloading(false);
       });
   };
 
+  const [loading, setloading] = useState(true);
   const [opened, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   function reply() {
@@ -103,19 +105,18 @@ const ChatMessage = (props: any) => {
         }
         onMouseLeave={() => setHovered(false)}
         position={message}
-        spacing="xs"
-        align="flex-start"
+        align="flex-end"
         noWrap
       >
-        <Avatar<"a">
-          component="a"
-          href={`/user/` + uid}
-          src={photoURL}
-          radius="xl"
-          hidden={message == "right" ? true : false}
-        />
         <Stack p={0} spacing={2} sx={{ maxWidth: "80%" }}>
-          <Group position={message}>
+          <Group position={message} align="flex-end" spacing="xs">
+            <Avatar<"a">
+              component="a"
+              href={`/user/` + uid}
+              src={photoURL}
+              radius="xl"
+              hidden={message == "right" ? true : false}
+            />
             <Stack p={0} spacing={0} m={0}>
               <Stack
                 p={0}
@@ -156,9 +157,11 @@ const ChatMessage = (props: any) => {
                     color="gray"
                     variant={repDel == undefined ? "light" : "outline"}
                     radius="lg"
-                    py="xs"
+                    py={8}
                   >
-                    {repDel == undefined ? (
+                    {loading ? (
+                      <Loader size="xs" />
+                    ) : repDel == undefined ? (
                       rtext
                     ) : (
                       <Text color="gray" size="xs">
@@ -202,7 +205,7 @@ const ChatMessage = (props: any) => {
                   sx={{}}
                   color={color}
                   radius="lg"
-                  py="xs"
+                  py={8}
                   variant={deleted == undefined ? "light" : "outline"}
                   onClick={() => {
                     setOpen((o) => !o);
