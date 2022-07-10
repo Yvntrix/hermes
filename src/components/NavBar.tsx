@@ -9,7 +9,7 @@ import {
 import { MessageCircle } from "tabler-icons-react";
 import { auth } from "../lib/firebase";
 import DarkMode from "./DarkMode";
-
+import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
     <>
@@ -22,9 +22,9 @@ const NavBar = () => {
           noWrap
         >
           {auth.currentUser ? (
-            <Avatar<"a">
-              component="a"
-              href={`/user/` + auth.currentUser.uid}
+            <Avatar<typeof Link>
+              component={Link}
+              to={`/user/` + auth.currentUser.uid}
               src={auth.currentUser.photoURL}
               radius="xl"
             />
@@ -37,7 +37,7 @@ const NavBar = () => {
             gradient={{ from: "grape", to: "cyan", deg: 90 }}
           >
             <Group align="center" noWrap spacing={3}>
-              <UnstyledButton<"a"> component="a" href="/home">
+              <UnstyledButton<typeof Link> component={Link} to="/home">
                 <Title>Hermes</Title>
               </UnstyledButton>
               <MessageCircle color="#4dabf7" size={30} />

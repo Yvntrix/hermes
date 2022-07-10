@@ -15,6 +15,7 @@ import calendar from "dayjs/plugin/calendar";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 import { CornerUpLeft, DotsVertical, Trash } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 
@@ -116,9 +117,9 @@ const ChatMessage = (props: any) => {
         <Stack p={0} spacing={2} sx={{ maxWidth: "80%" }} align="flex-end">
           <Group position={message} align="flex-end" spacing="xs">
             <FloatingTooltip label={sender} position="right">
-              <Avatar<"a">
-                component="a"
-                href={`/user/` + uid}
+              <Avatar<typeof Link>
+                component={Link}
+                to={`/user/` + uid}
                 src={photoURL}
                 radius="xl"
                 hidden={message == "right" ? true : false}
