@@ -3,6 +3,7 @@ import {
   Alert,
   Avatar,
   Collapse,
+  FloatingTooltip,
   Group,
   Loader,
   Menu,
@@ -35,10 +36,7 @@ const ChatMessage = (props: any) => {
   dayjs.extend(calendar);
 
   useEffect(() => {
-    if (ruid != undefined) {
-      getUser();
-    }
-
+    getUser();
     if (createdAt != null) {
       conditions();
     } else {
@@ -76,11 +74,18 @@ const ChatMessage = (props: any) => {
   const [repDel, setRepDel] = useState(undefined);
 
   const getUser = async () => {
-    const userSnap = await getDoc(doc(firestore, "users", ruid));
-    setName(userSnap.data()?.name);
-
-    const userSnap1 = await getDoc(doc(firestore, "users", uid));
-    setSender(userSnap1.data()?.name);
+    await firestore
+      .collection("users")
+      .doc(ruid)
+      .onSnapshot((snap) => {
+        setName(snap.data()?.name);
+      });
+    await firestore
+      .collection("users")
+      .doc(uid)
+      .onSnapshot((snap) => {
+        setSender(snap.data()?.name);
+      });
 
     await firestore
       .collection("messages")
@@ -91,7 +96,7 @@ const ChatMessage = (props: any) => {
       });
   };
 
-  const [loading, setloading] = useState(true);
+  const [loading, setloading] = useState(false);
   const [opened, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   function reply() {
@@ -108,15 +113,18 @@ const ChatMessage = (props: any) => {
         align="flex-end"
         noWrap
       >
-        <Stack p={0} spacing={2} sx={{ maxWidth: "80%" }}>
+        <Stack p={0} spacing={2} sx={{ maxWidth: "80%" }} align="flex-end">
           <Group position={message} align="flex-end" spacing="xs">
-            <Avatar<"a">
-              component="a"
-              href={`/user/` + uid}
-              src={photoURL}
-              radius="xl"
-              hidden={message == "right" ? true : false}
-            />
+            <FloatingTooltip label={sender} position="right">
+              <Avatar<"a">
+                component="a"
+                href={`/user/` + uid}
+                src={photoURL}
+                radius="xl"
+                hidden={message == "right" ? true : false}
+              />
+            </FloatingTooltip>
+
             <Stack p={0} spacing={0} m={0}>
               <Stack
                 p={0}
@@ -160,7 +168,7 @@ const ChatMessage = (props: any) => {
                     py={8}
                   >
                     {loading ? (
-                      <Loader size="xs" />
+                      <Loader size="xs" color={color} />
                     ) : repDel == undefined ? (
                       rtext
                     ) : (

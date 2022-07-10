@@ -9,6 +9,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChevronLeft, Logout } from "tabler-icons-react";
@@ -23,20 +24,15 @@ const UserProfile = () => {
   let { uid } = useParams();
   const [details, setDetails] = useState<any[]>([]);
   let datas: any[] = [];
-  const [mes, setMes] = useState<any[]>([]);
-  let mess: any[] = [];
   const [quota, setQuota] = useState(false);
-  const messagesRef = firestore.collection("messages");
-  const query = messagesRef.orderBy("createdAt");
   const [loading, setLoading] = useState(true);
   const [no, setNo] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       if (auth.currentUser) {
         getInfo();
-        getMessages();
       }
-    }, 500);
+    }, 400);
   }, []);
   function getInfo() {
     firestore
@@ -47,30 +43,13 @@ const UserProfile = () => {
         if (doc.exists) {
           datas.push(await doc.data());
           setDetails(datas);
+          setNo(false);
           setTimeout(() => {
-            setNo(false);
             setLoading(false);
-          }, 500);
+          }, 420);
         } else {
           setLoading(false);
         }
-      })
-      .catch((e) => {
-        setLoading(false);
-        setQuota(true);
-      });
-  }
-
-  function getMessages() {
-    query
-      .get()
-      .then(async (doc) => {
-        doc.forEach((snap) => {
-          if (uid == snap.data().uid) {
-            mess.push(snap.data());
-            setMes(mess);
-          }
-        });
       })
       .catch((e) => {
         setLoading(false);
@@ -91,7 +70,7 @@ const UserProfile = () => {
               <Group position="apart">
                 <Button<"a">
                   component="a"
-                  href="/"
+                  href="/home"
                   variant="default"
                   leftIcon={<ChevronLeft />}
                 >
@@ -99,7 +78,7 @@ const UserProfile = () => {
                 </Button>
                 <Button<"a">
                   component="a"
-                  href="/"
+                  href="/home"
                   variant="default"
                   leftIcon={<Logout />}
                   onClick={() => auth.signOut()}
@@ -125,18 +104,14 @@ const UserProfile = () => {
                   <Stack key={id} align="center">
                     <Avatar src={info.photo} size="xl" radius="xl" />
                     <Title order={2}>{info.name}</Title>
-                    <Paper sx={{ width: "100%" }}>
-                      <Text align="left">Messages Sent:</Text>
-                      <Divider my="sm" />
-                      <ScrollArea sx={{ height: "50vh" }}>
-                        <Stack p="xs">
-                          {mes.map((messages, id) => {
-                            return <ChatMessage key={id} message={messages} />;
-                          })}
-                        </Stack>
-                      </ScrollArea>
-                      <Divider my="sm" />
-                    </Paper>
+                    <Group>
+                      <Text weight={550}>Date Joined:</Text>
+                      <Text>
+                        {dayjs
+                          .unix(info.dateJoined.seconds)
+                          .format("MMMM D, YYYY h:mm A")}
+                      </Text>
+                    </Group>
                   </Stack>
                 );
               })

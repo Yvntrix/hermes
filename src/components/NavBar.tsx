@@ -13,7 +13,7 @@ import DarkMode from "./DarkMode";
 const NavBar = () => {
   return (
     <>
-      <Paper radius={0}>
+      <Paper radius={0} sx={{ borderBottom: "1px solid #ADB5BD" }}>
         <Group
           position="apart"
           p="sm"
@@ -37,7 +37,7 @@ const NavBar = () => {
             gradient={{ from: "grape", to: "cyan", deg: 90 }}
           >
             <Group align="center" noWrap spacing={3}>
-              <UnstyledButton<"a"> component="a" href="/">
+              <UnstyledButton<"a"> component="a" href="/home">
                 <Title>Hermes</Title>
               </UnstyledButton>
               <MessageCircle color="#4dabf7" size={30} />

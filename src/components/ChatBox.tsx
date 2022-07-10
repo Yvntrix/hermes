@@ -10,7 +10,7 @@ const ChatBox = (props: any) => {
   const [value, setValue] = useState("");
   const messagesRef = firestore.collection("messages");
   const user = auth.currentUser;
-  let mess = "";
+  let mess = "";  
   const sendMessage = async () => {
     if (user) {
       if (value.length > 100) {
