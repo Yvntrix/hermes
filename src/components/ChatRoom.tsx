@@ -31,8 +31,12 @@ const ChatRoom = () => {
   const [id, setId] = useState("");
 
   useEffect(() => {
-    setUser();
-    getMessages();
+    setTimeout(() => {
+      if (auth.currentUser) {
+        setUser();
+        getMessages();
+      }
+    }, 500);
   }, []);
 
   const getMessages = () => {
@@ -154,7 +158,7 @@ const ChatRoom = () => {
       ) : (
         <>
           <NavBar />
-          <Stack sx={{ height: "84vh" }} pt="xs">
+          <Stack sx={{ height: "84vh" }} p={0}>
             <ScrollArea p="xs" scrollbarSize={1} sx={{ height: "84vh" }}>
               <Stack>
                 <Group hidden={inView} position="center" pt="xs">

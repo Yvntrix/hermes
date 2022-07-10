@@ -13,7 +13,10 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
     <>
-      <Paper radius={0} sx={{ borderBottom: "1px solid #ADB5BD" }}>
+      <Paper
+        radius={0}
+        sx={{ boxShadow: "0px 2px 0px 0px rgba(173,181,189,.5)" }}
+      >
         <Group
           position="apart"
           p="sm"

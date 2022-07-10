@@ -47,6 +47,7 @@ function App() {
           withGlobalStyles
           withNormalizeCSS
         >
+          {}
           <Home />
         </MantineProvider>
       </ColorSchemeProvider>

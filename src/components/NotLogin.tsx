@@ -1,4 +1,5 @@
 import { Button, Center, Stack, Title } from "@mantine/core";
+import { Link } from "react-router-dom";
 
 const NotLogin = () => {
   return (
@@ -7,7 +8,7 @@ const NotLogin = () => {
         <Title align="center" order={2}>
           Please Sign In before viewing this profile
         </Title>
-        <Button<"a"> component="a" href="/" variant="default">
+        <Button<typeof Link> component={Link} to="/home" variant="default">
           Sign in
         </Button>
       </Stack>

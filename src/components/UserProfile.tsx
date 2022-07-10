@@ -11,7 +11,7 @@ import {
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ChevronLeft, Logout } from "tabler-icons-react";
 import { auth, firestore } from "../lib/firebase";
 import NotFound from "./404";
@@ -32,7 +32,7 @@ const UserProfile = () => {
       if (auth.currentUser) {
         getInfo();
       }
-    }, 400);
+    }, 500);
   }, []);
   function getInfo() {
     firestore
@@ -46,7 +46,7 @@ const UserProfile = () => {
           setNo(false);
           setTimeout(() => {
             setLoading(false);
-          }, 420);
+          }, 200);
         } else {
           setLoading(false);
         }
@@ -56,6 +56,12 @@ const UserProfile = () => {
         setQuota(true);
       });
   }
+
+  const signOut = async () => {
+    try {
+      await auth.signOut();
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -68,20 +74,20 @@ const UserProfile = () => {
           <Stack sx={{ height: "84vh" }} p="xs">
             {auth.currentUser.uid == uid ? (
               <Group position="apart">
-                <Button<"a">
-                  component="a"
-                  href="/home"
+                <Button<typeof Link>
+                  component={Link}
+                  to="/home"
                   variant="default"
                   leftIcon={<ChevronLeft />}
                 >
                   Go Back
                 </Button>
-                <Button<"a">
-                  component="a"
-                  href="/home"
+                <Button<typeof Link>
+                  component={Link}
+                  to="/home"
                   variant="default"
                   leftIcon={<Logout />}
-                  onClick={() => auth.signOut()}
+                  onClick={() => signOut()}
                 >
                   Sign Out
                 </Button>
