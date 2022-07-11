@@ -5,7 +5,6 @@ import {
   Paper,
   ScrollArea,
   Stack,
-  Text,
 } from "@mantine/core";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
@@ -37,6 +36,7 @@ const ChatRoom = () => {
         getMessages();
       }
     }, 500);
+    // eslint-disable-next-line
   }, []);
 
   const getMessages = () => {
@@ -49,7 +49,7 @@ const ChatRoom = () => {
           if (change.type === "added") {
             mess = [];
             snap.docs.reverse().map((doc) => {
-              mess.push({
+              return mess.push({
                 id: doc.id,
                 text: doc.data().text,
                 uid: doc.data().uid,
@@ -65,7 +65,7 @@ const ChatRoom = () => {
           if (change.type === "modified") {
             mess = [];
             snap.docs.reverse().map((doc) => {
-              mess.push({
+              return mess.push({
                 id: doc.id,
                 text: doc.data().text,
                 uid: doc.data().uid,
@@ -133,7 +133,7 @@ const ChatRoom = () => {
     );
     const reply = replySnap.data()?.text;
     let name = "";
-    if (replySnap.data()?.uid == auth.currentUser?.uid) {
+    if (replySnap.data()?.uid === auth.currentUser?.uid) {
       name = "yourself";
     } else {
       name = userSnap.data()?.name;
@@ -144,7 +144,7 @@ const ChatRoom = () => {
     setHidden(false);
   };
   const [hidden, setHidden] = useState(true);
-  const { ref, inView, entry } = useInView({
+  const { ref, inView } = useInView({
     /* Optional options */
     delay: 600,
     threshold: 1,

@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -43,6 +43,7 @@ const ChatMessage = (props: any) => {
     } else {
       setMsgDate("Just now");
     }
+    // eslint-disable-next-line
   }, []);
   function conditions() {
     if (dayjs().diff(dayjs.unix(createdAt.seconds), "h") > 48) {
@@ -53,20 +54,20 @@ const ChatMessage = (props: any) => {
   }
 
   function deleteMe() {
-    if (uid == auth.currentUser?.uid) {
+    if (uid === auth.currentUser?.uid) {
       updateDoc(doc(firestore, "messages", id), { deleted: true });
     } else {
       toast.error("This is not yours.");
     }
   }
 
-  if (uid == "4d43TqC5jRMhqOM7hcitTmx4mde2") {
+  if (uid === "4d43TqC5jRMhqOM7hcitTmx4mde2") {
     color = "teal";
   } else {
-    if (message == "right") {
+    if (message === "right") {
       color = "yellow";
     }
-    if (message == "left") {
+    if (message === "left") {
       color = "indigo";
     }
   }
@@ -107,7 +108,7 @@ const ChatMessage = (props: any) => {
     <>
       <Group
         onMouseEnter={() =>
-          deleted == undefined ? setHovered(true) : undefined
+          deleted === undefined ? setHovered(true) : undefined
         }
         onMouseLeave={() => setHovered(false)}
         position={message}
@@ -122,7 +123,7 @@ const ChatMessage = (props: any) => {
                 to={`/user/` + uid}
                 src={photoURL}
                 radius="xl"
-                hidden={message == "right" ? true : false}
+                hidden={message === "right" ? true : false}
               />
             </FloatingTooltip>
 
@@ -132,8 +133,8 @@ const ChatMessage = (props: any) => {
                 spacing={0}
                 m={0}
                 hidden={
-                  deleted == undefined
-                    ? repliedTo == undefined
+                  deleted === undefined
+                    ? repliedTo === undefined
                       ? true
                       : false
                     : true
@@ -150,12 +151,12 @@ const ChatMessage = (props: any) => {
                 >
                   <CornerUpLeft size={15} />
                   <Text size="xs" align={message} p={0}>
-                    {uid == auth.currentUser?.uid ? "You" : sender} replied to{" "}
-                    {ruid == uid
-                      ? uid == auth.currentUser?.uid
+                    {uid === auth.currentUser?.uid ? "You" : sender} replied to{" "}
+                    {ruid === uid
+                      ? uid === auth.currentUser?.uid
                         ? "yourself"
                         : "themself"
-                      : ruid == auth.currentUser?.uid
+                      : ruid === auth.currentUser?.uid
                       ? "you"
                       : name}
                   </Text>
@@ -164,13 +165,13 @@ const ChatMessage = (props: any) => {
                   <Alert
                     sx={{ bottom: "-10px", zIndex: -1 }}
                     color="gray"
-                    variant={repDel == undefined ? "light" : "outline"}
+                    variant={repDel === undefined ? "light" : "outline"}
                     radius="lg"
                     py={8}
                   >
                     {loading ? (
                       <Loader size="xs" color={color} />
-                    ) : repDel == undefined ? (
+                    ) : repDel === undefined ? (
                       rtext
                     ) : (
                       <Text color="gray" size="xs">
@@ -186,7 +187,7 @@ const ChatMessage = (props: any) => {
                     position="top"
                     placement="center"
                     size="xs"
-                    hidden={message == "left"}
+                    hidden={message === "left"}
                     control={
                       <ActionIcon radius="xl" color="dark">
                         <DotsVertical size={20} />
@@ -215,12 +216,12 @@ const ChatMessage = (props: any) => {
                   color={color}
                   radius="lg"
                   py={8}
-                  variant={deleted == undefined ? "light" : "outline"}
+                  variant={deleted === undefined ? "light" : "outline"}
                   onClick={() => {
                     setOpen((o) => !o);
                   }}
                 >
-                  {deleted == undefined ? (
+                  {deleted === undefined ? (
                     text
                   ) : (
                     <Text color={color} size="xs">
@@ -232,7 +233,7 @@ const ChatMessage = (props: any) => {
                   <Menu
                     position="top"
                     placement="center"
-                    hidden={message == "right"}
+                    hidden={message === "right"}
                     size="xs"
                     control={
                       <ActionIcon radius="xl" color="dark">

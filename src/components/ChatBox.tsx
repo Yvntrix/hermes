@@ -21,7 +21,7 @@ const ChatBox = (props: any) => {
         mess = value;
         setValue("");
         const { uid, photoURL } = user;
-        if (props.id == "") {
+        if (props.id === "") {
           await messagesRef.add({
             text: mess,
             createdAt: serverTimestamp(),
