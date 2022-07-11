@@ -56,7 +56,7 @@ const ChatBox = (props: any) => {
               <ActionIcon
                 onClick={() =>
                   toast("Display only hehe", {
-                    icon: "😂",
+                    icon: "😁",
                   })
                 }
               >

@@ -43,7 +43,7 @@ const ChatRoom = () => {
     firestore
       .collection("messages")
       .orderBy("createdAt", "desc")
-      .limit(100)
+      .limit(25)
       .onSnapshot((snap) => {
         snap.docChanges().forEach((change) => {
           if (change.type === "added") {
