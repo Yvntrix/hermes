@@ -1,3 +1,7 @@
+## Check Improved version with cleaner code
+
+https://github.com/Yvntrix/chat-ai
+
 # Hermes Chat App
 
 A simple chat web app made with react and firebase
