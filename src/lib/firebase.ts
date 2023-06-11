@@ -5,19 +5,17 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 
 const firebaseConfig = {
+  apiKey: process.env.REACT_APP_API_KEY,
 
-    apiKey: "AIzaSyDRCoYLr3Jwp7MbLwWdzAkvkn62QpuNAkw",
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
 
-    authDomain: "chat-app-9fee8.firebaseapp.com",
+  projectId: process.env.REACT_APP_PROJECT_ID,
 
-    projectId: "chat-app-9fee8",
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 
-    storageBucket: "chat-app-9fee8.appspot.com",
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
 
-    messagingSenderId: "655047559253",
-
-    appId: "1:655047559253:web:02ebd7e561b12ea94d2cdc"
-
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -25,6 +23,3 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 export const firestore = firebase.firestore();
-
-
-
