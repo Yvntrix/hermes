@@ -1,6 +1,6 @@
-## Check Improved version with cleaner code
+~~## Check Improved version with cleaner code~~
 
-https://github.com/Yvntrix/chat-ai
+~~https://github.com/Yvntrix/chat-ai~~ No more OpenAI api tokens
 
 # Hermes Chat App
 
